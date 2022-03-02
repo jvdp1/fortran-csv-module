@@ -205,7 +205,7 @@
 !>
 !  Read a CSV file.
 
-    subroutine read_csv_file(me,filename,header_row,skip_rows,missing,status_ok)
+    subroutine read_csv_file(me,filename,header_row,skip_rows,missing,delimiter,status_ok)
 
     implicit none
 
@@ -214,6 +214,8 @@
     logical,intent(out) :: status_ok  !! status flag
     integer,intent(in),optional :: header_row  !! the header row
     integer,dimension(:),intent(in),optional :: skip_rows  !! rows to skip
+    character(len=1),intent(in),optional :: delimiter         !! note: can only be one character
+                                                              !! (Default is `,`)
     character(len=*),intent(in),optional :: missing
 
     type(csv_string),dimension(:),allocatable :: row_data  !! a tokenized row
@@ -238,6 +240,8 @@
 
     me%missing%str = defmissing
     if (present(missing)) me%missing%str = missing
+
+    if (present(delimiter)) me%delimiter = delimiter
 
     open(newunit=iunit, file=filename, status='OLD', iostat=istat)
 
